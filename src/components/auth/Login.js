@@ -15,15 +15,20 @@ import { Input, Card, Button } from "@rneui/themed";
 import { AuthContext } from "../context/AuthContext";
 import { AxiosContext } from "../context/AxiosContext";
 import * as Keychain from "react-native-keychain";
+import axios from "axios";
 import InputField from "../InputField";
+import jwt_decode from "jwt-decode";
+
 import { useNavigation } from "@react-navigation/native";
-var pas = "1232"
+var pas = "1232";
 // export const PasswordContext = createContext({ password });
 const Login = ({ navigation }) => {
   const [phone_number, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const authContext = useContext(AuthContext);
   const { publicAxios } = useContext(AxiosContext);
+  const [acc, setAcc] = useState("");
+
   const onLogin = async () => {
     try {
       const response = await publicAxios.post("/login/", {
@@ -31,20 +36,23 @@ const Login = ({ navigation }) => {
         password: password,
       });
       const { access, refresh } = response.data;
-      authContext.setAuthState({
-        access,
-        refresh,
-        authenticated: true,
-        password: password,
-      });
-
-      await Keychain.setGenericPassword(
-        "token",
-        JSON.stringify({
+        authContext.setAuthState({
           access,
           refresh,
-        })
-      );
+          authenticated: true,
+          password: password,
+          phone_number: phone_number,
+        });
+        await Keychain.setGenericPassword(
+          "token",
+          JSON.stringify({
+            access,
+            refresh,
+
+          }),
+        );
+
+      
     } catch (e) {
       console.log(e);
     }

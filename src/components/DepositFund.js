@@ -12,23 +12,24 @@ import jwt_decode from "jwt-decode";
 const bootstrapStyleSheet = new BootstrapStyleSheet();
 
 const { s, c } = bootstrapStyleSheet;
-const Withdrawal = () => {
+const DepositFund = () => {
   const navigation = useNavigation();
   const authContext = useContext(AuthContext);
   const [amount, setAmount] = useState("");
   const [fee, setFee] = useState("");
-  const [agentNumber, setAgentNumber] = useState("");
-  const [agentCode, setAgentCode] = useState("");
+  const [momoNumber, setMomoNumber] = useState("");
   const [balance, setBalance] = useState("");
-  const [agentbalance, setAgentBalance] = useState("");
-  const [agentUserId, setAgentUserId] = useState("");
+  const [useBalance, setUserBalance] = useState("");
+  const [userId, setUserId] = useState("");
   const [btn, setBtn] = useState(false);
-  const withdraw_url = "https://info307-production.up.railway.app/withdraw";
+  const deposit_url = "https://info307-production.up.railway.app/deposit";
   const user = jwt_decode(AuthContext._currentValue.authState.access);
   const balance_url = `https://info307-production.up.railway.app/accountbalance/`;
   const agent_url =
     "https://info307-production.up.railway.app/account/agent-account/";
   const pin = authContext.authState.password;
+
+  const account_url = "https://info307-production.up.railway.app/account/";
 
   const [submitting, setSubmitting] = useState(false);
 
@@ -46,52 +47,70 @@ const Withdrawal = () => {
   }, []);
 
   const new_ba = parseInt(balance.balance) - parseInt(amount);
-  const new_bal = parseInt(agentbalance.balance) + parseInt(amount);
 
-  const withdraw_momo = async () => {
-    axios.post(withdraw_url, {
+  const deposit_momo = async () => {
+    await axios.post(deposit_url, {
       amount: amount,
-      momo_agent: agentCode,
-      user: user.user_id,
+      momo_agent: user.user_id,
+      recipient: momoNumber,
+      
     });
-    axios.patch(balance_url, {
+    await console.log("respose: ", response.data);
+    await axios.patch(balance_url + `${user.user_id}`, {
       balance: new_ba,
     });
-    const response = await fetch(agent_url + `${agentUserId}`);
-
-    const dat = await response.json();
-    const bal = parseInt(dat.balance) + parseInt(amount);
-    axios.patch(agent_url + `${dat.id}`, {
-      balance: bal,
-    });
-    navigation.navigate("Home");
+    await navigation.navigate("Home");
   };
 
   const collect = async () => {
     isSubmitting();
-    const res = await fetch(agent_url + `${agentCode}`);
-    if (res.status !== 200) {
-      Alert.alert(`Invalid Code`);
-    }
-    const data = await res.json();
-    console.log("here 1: ", data);
-    if (agentNumber !== data.user.phone_number) {
-      Alert.alert("Number is Incorrect");
+
+    const response = await fetch(account_url);
+    const data_response = await response.json();
+    const data_res = await data_response.filter(
+      (account) => account.phone_number == momoNumber
+    );
+    if (data_res.length == 0) {
+      Alert.alert("Number Not Found");
+      setSubmitting(false);
+      setBtn(false);
     } else {
+      const data = await data_res[0];
+      const balance_response = await fetch(balance_url + `${data.id}`);
+      const data_balance = await balance_response.json();
+
+      const new_bal = (await parseInt(data_balance.balance)) + parseInt(amount);
+
       Alert.prompt(
         "Enter PIN",
-        `Enter your your to withdraw ${amount} from ${data.agent_name} ${data.agent_code}`,
+        `Enter your your to Deposit ${amount} to ${data.first_name} ${data.last_name}`,
         [
           {
             text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
+            onPress: () => {
+              console.log("Cancel Pressed");
+              setSubmitting(false);
+              setBtn(false);
+            },
             style: "cancel",
           },
           {
             text: "OK",
             onPress: async (password) => {
               if (password == pin) {
-                withdraw_momo();
+              await axios.post(deposit_url, {
+                amount: amount,
+                momo_agent: user.user_id,
+                recipient: data.id,
+              });
+              await console.log("respose: ", response.data);
+              await axios.patch(balance_url + `${user.user_id}`, {
+                balance: new_ba,
+              });
+              await navigation.navigate("Home");
+                await axios.patch(balance_url + `${data.id}`, {
+                  balance: new_bal,
+                });
                 navigation.navigate("Home");
                 setSubmitting(false);
                 setBtn(false);
@@ -111,7 +130,7 @@ const Withdrawal = () => {
   return (
     <View style={[s.container]}>
       <Card>
-        <Card.Title>Deposit Money</Card.Title>
+        <Card.Title>Withdraw Money</Card.Title>
         <Card.Divider />
         <Card.Title>{balance.balance} </Card.Title>
         <Card.Divider />
@@ -123,18 +142,11 @@ const Withdrawal = () => {
           onChangeText={(e) => setAmount(e)}
         />
         <Input
-          placeholder="Enter Merchant Code"
+          placeholder="Enter Momo Number"
           rightIcon={{ type: "font-awesome", name: "chevron-right" }}
           keyboardType="numeric"
-          value={agentCode}
-          onChangeText={(e) => setAgentCode(e)}
-        />
-        <Input
-          placeholder="Enter Merchant Number"
-          rightIcon={{ type: "font-awesome", name: "chevron-right" }}
-          keyboardType="numeric"
-          value={agentNumber}
-          onChangeText={(e) => setAgentNumber(e)}
+          value={momoNumber}
+          onChangeText={(e) => setMomoNumber(e)}
         />
         {submitting && (
           <ActivityIndicator
@@ -153,4 +165,4 @@ const Withdrawal = () => {
   );
 };
 
-export default Withdrawal;
+export default DepositFund;

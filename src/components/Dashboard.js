@@ -19,7 +19,7 @@ const Dashboard = ({ route, navigation }) => {
             width: "100%",
           }}
         >
-          Main Account
+          Main Account {authContext.authState.account}
         </Text>
       </View>
       <View>

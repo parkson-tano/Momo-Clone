@@ -16,6 +16,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import RegisterStack from "./RegisterStack";
 import FundTransfer from "../FundTransfer";
 import Profile from "../Profile";
+import ChangePassword from "../ChangePassword";
+import DepositFund from "../DepositFund";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -43,6 +45,8 @@ const DashboardStack = () => {
       <Stack.Screen name="TopOther" component={TopOther} />
       <Stack.Screen name="FundTransfer" component={FundTransfer} />
       <Stack.Screen name="FundWithdraw" component={Withdrawal} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="FundDeposit" component={DepositFund} />
     </Stack.Navigator>
   );
 };

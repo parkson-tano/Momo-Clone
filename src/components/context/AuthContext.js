@@ -9,6 +9,7 @@ const AuthProvider = ({ children }) => {
     refresh: null,
     authenticated: null,
     password: null,
+    phone_number: null,
   });
 
   const logout = () => {
@@ -18,6 +19,7 @@ const AuthProvider = ({ children }) => {
       refresh: null,
       authenticated: false,
       password: null,
+      phone_number: null,
     });
   };
 

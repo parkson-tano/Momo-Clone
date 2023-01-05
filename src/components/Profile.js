@@ -8,7 +8,8 @@ import { AuthContext } from "./context/AuthContext";
 import { AxiosContext } from "./context/AxiosContext";
 const bootstrapStyleSheet = new BootstrapStyleSheet();
 const { s, c } = bootstrapStyleSheet;
-const Profile = () => {
+const Profile = ({ navigation }) => {
+
   const axiosContext = useContext(AxiosContext);
   const authContext = useContext(AuthContext);
   return (
@@ -16,6 +17,11 @@ const Profile = () => {
       <Card>
         <Card.Title>My Profile</Card.Title>
         <Card.Divider />
+        <Card.Title>
+          {authContext.authState.phone_number}
+        </Card.Title>
+        <Card.Divider />
+        <Button title = "Change Password" onPress={() => navigation.navigate("ChangePassword")} style= {{marginBottom: 20}}/>
         <Button title="Logout" onPress={() => authContext.logout()} />
       </Card>
     </View>
