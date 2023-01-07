@@ -17,12 +17,22 @@ const Profile = ({ navigation }) => {
       <Card>
         <Card.Title>My Profile</Card.Title>
         <Card.Divider />
-        <Card.Title>
-          {authContext.authState.phone_number}
-        </Card.Title>
+        <Card.Title>{authContext.authState.phone_number}</Card.Title>
         <Card.Divider />
-        <Button title = "Change Password" onPress={() => navigation.navigate("ChangePassword")} style= {{marginBottom: 20}}/>
-        <Button title="Logout" onPress={() => authContext.logout()} />
+        <Button
+          title="Change Password"
+          onPress={() => navigation.navigate("ChangePassword")}
+          style={[s.py5]}
+        />
+        <Button
+          title="Logout"
+          onPress={() => authContext.logout()}
+          style={[s.py5]}
+          buttonStyle={{
+            borderColor: "rgba(78, 116, 289, 1)",
+            marginTop:20
+          }}
+        />
       </Card>
     </View>
   );

@@ -83,7 +83,7 @@ const DepositFund = () => {
 
       Alert.prompt(
         "Enter PIN",
-        `Enter your your to Deposit ${amount} to ${data.first_name} ${data.last_name}`,
+        `Enter your PIN to Deposit ${amount} to ${data.first_name} ${data.last_name}`,
         [
           {
             text: "Cancel",
@@ -130,7 +130,7 @@ const DepositFund = () => {
   return (
     <View style={[s.container]}>
       <Card>
-        <Card.Title>Withdraw Money</Card.Title>
+        <Card.Title>Deposit Money</Card.Title>
         <Card.Divider />
         <Card.Title>{balance.balance} </Card.Title>
         <Card.Divider />

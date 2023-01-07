@@ -12,9 +12,7 @@ const Stack = createNativeStackNavigator();
 SplashScreen.hideAsync();
 
 function App() {
-  useEffect(() => {
-    SplashScreen.hideAsync();
-  }, []);
+
   return (
     <AuthProvider>
       <AxiosProvider>

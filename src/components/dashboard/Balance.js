@@ -17,7 +17,7 @@ const wait = (timeout) => {
 const Balance = () => {
   const navigation = useNavigation();
 
-  const user = jwt_decode(AuthContext._currentValue.authState.access);
+  const user = jwt_decode(AuthContext._currentValue.authState.access)
   console.log("user:", user);
   const [balance, setBalance] = useState("");
   const [transaction, setTransaction] = useState("");

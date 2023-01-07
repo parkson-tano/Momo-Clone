@@ -15,7 +15,7 @@ const Service = () => {
 
   const loadJWT = useCallback(async () => {
     try {
-      const value = await Keychain.getGenericPassword();
+      const value = Keychain.getGenericPassword();
       const jwt = JSON.parse(value.password);
       authContext.setAuthState({
         access: jwt.access || null,
@@ -39,8 +39,11 @@ const Service = () => {
   }, [loadJWT]);
 
   if (status === "loading") {
-    return <Spinner />;
+        return <RegisterStack />;
+  } else {
+    return <DashboardStack />;
   }
+
 
   if (authContext?.authState?.authenticated === false) {
     return <RegisterStack />;

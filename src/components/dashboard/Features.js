@@ -41,9 +41,6 @@ const Features = () => {
 
   }
 
-  console.log('accou: ', account_type)
-    console.log("my: ", accounts);
-
   return (
     <SafeAreaView>
       <Card containerStyle={{ backgroundColor: "none" }}>

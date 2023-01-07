@@ -18,7 +18,7 @@ import * as Keychain from "react-native-keychain";
 import axios from "axios";
 import InputField from "../InputField";
 import jwt_decode from "jwt-decode";
-
+import * as SecureStore from "expo-secure-store";
 import { useNavigation } from "@react-navigation/native";
 var pas = "1232";
 // export const PasswordContext = createContext({ password });
@@ -28,6 +28,9 @@ const Login = ({ navigation }) => {
   const authContext = useContext(AuthContext);
   const { publicAxios } = useContext(AxiosContext);
   const [acc, setAcc] = useState("");
+  const [authorizerRefreshTokenKey, setAuthorizerRefreshTokenKey] = useState(
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY3MzE5OTY1NCwiaWF0IjoxNjczMTEzMjU0LCJqdGkiOiI0NGUwODU4ZmU3MmQ0YTM5OTAxMmQ3OTE5NzRjYjk3MiIsInVzZXJfaWQiOjEsInBob25lX251bWJlciI6IjEyMzQ1NjEyMyJ9.tHux8hKNqk60FhxZBWkn3merwX9LnJRz-V-pelRW9fo"
+  );
 
   const onLogin = async () => {
     try {
@@ -36,6 +39,7 @@ const Login = ({ navigation }) => {
         password: password,
       });
       const { access, refresh } = response.data;
+      await setAuthorizerRefreshTokenKey(refresh)
         authContext.setAuthState({
           access,
           refresh,
@@ -44,14 +48,22 @@ const Login = ({ navigation }) => {
           phone_number: phone_number,
         });
         await Keychain.setGenericPassword(
-          "token",
+          refresh,
           JSON.stringify({
+
             access,
             refresh,
 
           }),
         );
 
+        // await SecureStore.setItemAsync(
+        //   authorizerRefreshTokenKey,
+        //   JSON.stringify({
+        //     access,
+        //     refresh,
+        //   })
+        // );
       
     } catch (e) {
       console.log(e);
