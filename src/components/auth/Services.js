@@ -39,11 +39,8 @@ const Service = () => {
   }, [loadJWT]);
 
   if (status === "loading") {
-        return <RegisterStack />;
-  } else {
-    return <DashboardStack />;
+    return <Spinner />;
   }
-
 
   if (authContext?.authState?.authenticated === false) {
     return <RegisterStack />;
